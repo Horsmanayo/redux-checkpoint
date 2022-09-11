@@ -18,7 +18,7 @@ const child = {
   },
 };
 
-const TodoItem = ({ todo }) => {
+const TodoItem = ({ todo, key }) => {
   const dispatch = useDispatch();
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -59,7 +59,7 @@ const TodoItem = ({ todo }) => {
         initial="hidden"
         animate="visible"
       >
-        <div className={styles.todoDetails}>
+        <div className={styles.todoDetails} key={key}>
           <CheckboxButton checked={checked} handleCheck={handleCheck} />
           <div className={styles.text}>
             <p

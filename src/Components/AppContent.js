@@ -26,8 +26,11 @@ const child = {
 function AppContent() {
   const todoList = useSelector((state) => state.todo.todoList);
 
+  // console.log('todo', todoList);
+
   const sortedTodoList = [...todoList];
-  sortedTodoList.sort((a, b) => new Date(b.time) - new Date(a.time));
+  console.log('sorted', sortedTodoList);
+  sortedTodoList?.sort((a, b) => new Date(b.time) - new Date(a.time));
 
   const filterStatus = useSelector((state) => state.todo.initialFilterStatus);
 
