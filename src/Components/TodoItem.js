@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
 import { deleteTodo, updateTodo } from '../slices/todoSlice';
 // import { format } from 'date-fns/esm';
 import styles from '../styles/modules/todoItem.module.scss';
@@ -9,15 +10,23 @@ import { getClasses } from '../utils/getClasses';
 import CheckboxButton from './CheckboxButton';
 import TodoModule from './TodoModule';
 
+const child = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
+
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [checked, setChecked] = useState(false);
 
   useState(() => {
-    if (todo.status === 'checked') {
+    if (todo.status === 'complete') {
       setChecked(true);
-    } else {
+    } else if (todo.status === 'incomplete') {
       setChecked(false);
     }
   }, [todo.status]);
@@ -30,14 +39,28 @@ const TodoItem = ({ todo }) => {
 
   const handleUpdate = () => {
     setUpdateModalOpen(true);
-    // dispatch(updateTodo())
+  };
+
+  const handleCheck = () => {
+    setChecked(!checked);
+    dispatch(
+      updateTodo({
+        ...todo,
+        status: checked ? 'incomplete' : 'complete',
+      })
+    );
   };
 
   return (
     <>
-      <div className={styles.item}>
+      <motion.div
+        className={styles.item}
+        variants={child}
+        initial="hidden"
+        animate="visible"
+      >
         <div className={styles.todoDetails}>
-          <CheckboxButton checked={checked} setChecked={setChecked} />
+          <CheckboxButton checked={checked} handleCheck={handleCheck} />
           <div className={styles.text}>
             <p
               className={getClasses([
@@ -70,7 +93,7 @@ const TodoItem = ({ todo }) => {
             <MdEdit />
           </div>
         </div>
-      </div>
+      </motion.div>
       <TodoModule
         type="update"
         todo={todo}

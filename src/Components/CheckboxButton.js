@@ -1,24 +1,51 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import styles from '../styles/modules/todoItem.module.scss';
-// const checkVariants = {
-//     intitial;{
-//         color: 'afff'
-//     },
-//     checked;{
 
-//     }
-// }
-function CheckboxButton({ checked, setChecked }) {
+const checkVariants = {
+  intitial: {
+    color: '#fff',
+  },
+  checked: {
+    pathLength: 1,
+  },
+  unchecked: {
+    pathLength: 0,
+  },
+};
+
+const boxVariant = {
+  checked: {
+    background: 'var(--primaryPurple)',
+    transition: { duration: 0.1 },
+  },
+  unchecked: {
+    background: 'var(--gray-1)',
+    transition: { duration: 0.1 },
+  },
+};
+
+function CheckboxButton({ checked, handleCheck }) {
+  const pathLength = useMotionValue(0);
+  const opacity = useTransform(pathLength, [0.05, 0.15], [0, 1]);
+
   return (
-    <motion.div className={styles.svgBox}>
-      <svg
+    <motion.div
+      className={styles.svgBox}
+      variants={boxVariant}
+      animate={checked ? 'checked' : 'unchecked'}
+      onClick={handleCheck}
+    >
+      <motion.svg
         className={styles.svg}
         viewBox="0 0 53 38"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
+        <motion.path
+          variants={checkVariants}
+          animate={checked ? 'checked' : 'unchecked'}
+          style={{ pathLength, opacity }}
           fill="none"
           strokeMiterlimit="10"
           strokeWidth="6"
@@ -26,7 +53,7 @@ function CheckboxButton({ checked, setChecked }) {
           strokeLinejoin="round"
           strokeLinecap="round"
         />
-      </svg>
+      </motion.svg>
     </motion.div>
   );
 }
